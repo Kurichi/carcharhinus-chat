@@ -57,6 +57,7 @@ func (h *ChatHandler) Join(c echo.Context) error {
 			break
 		}
 		msg.Timestamp = time.Now().Unix()
+		msg.UserName = username
 
 		users, err := h.repo.GetUsers(roomID)
 		if err != nil {
