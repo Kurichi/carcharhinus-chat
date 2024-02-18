@@ -13,7 +13,10 @@ type RoomRepository struct {
 }
 
 func NewRoomRepository() *RoomRepository {
-	return &RoomRepository{}
+	return &RoomRepository{
+		lock:  &sync.RWMutex{},
+		users: map[string]map[string]*domain.User{},
+	}
 }
 
 func (r *RoomRepository) IsRoomExist(roomID string) bool {
