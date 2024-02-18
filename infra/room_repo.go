@@ -68,19 +68,20 @@ func (r *RoomRepository) RemoveUser(roomID, userID string) error {
 	return nil
 }
 
-func (r *RoomRepository) GetUsers(roomID string) ([]*domain.User, error) {
+func (r *RoomRepository) PushMsg(roomID string, msg *domain.Comment) error {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
 
 	room, ok := r.users[roomID]
 	if !ok {
-		return nil, errors.WithStack(domain.ErrRoomNotFound)
+		return errors.WithStack(domain.ErrRoomNotFound)
 	}
 
-	users := make([]*domain.User, 0, len(room))
+	// users := make([]*domain.User, 0, len(room))
 	for _, user := range room {
-		users = append(users, user)
+		// users = append(users, user)
+		user.Ch <- *msg
 	}
 
-	return users, nil
+	return nil
 }

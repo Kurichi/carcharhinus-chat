@@ -62,13 +62,13 @@ func (h *ChatHandler) Join(c echo.Context) error {
 		msg.Timestamp = time.Now().Unix()
 		msg.UserName = username
 
-		users, err := h.repo.GetUsers(roomID)
+		err := h.repo.PushMsg(roomID, &msg)
 		if err != nil {
 			break
 		}
-		for _, u := range users {
-			u.Ch <- msg
-		}
+		// for _, u := range users {
+		// 	u.Ch <- msg
+		// }
 	}
 
 	return nil
