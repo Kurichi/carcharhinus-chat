@@ -54,7 +54,9 @@ func (h *ChatHandler) Join(c echo.Context) error {
 	}
 	user.Run()
 
+	ticker := time.NewTicker(1 * time.Second)
 	for {
+		<-ticker.C
 		var msg domain.Comment
 		if err := ws.ReadJSON(&msg); err != nil {
 			break
