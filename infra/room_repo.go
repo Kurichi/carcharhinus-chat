@@ -45,7 +45,8 @@ func (r *RoomRepository) AddUser(roomID string, user *domain.User) error {
 	defer r.lock.Unlock()
 
 	if _, ok := r.users[roomID]; !ok {
-		return errors.WithStack(domain.ErrRoomNotFound)
+		r.users[roomID] = map[string]*domain.User{}
+		// return errors.WithStack(domain.ErrRoomNotFound)
 	}
 	r.users[roomID][user.ID] = user
 
