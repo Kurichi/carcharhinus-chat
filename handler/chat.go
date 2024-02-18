@@ -35,7 +35,7 @@ func (h *ChatHandler) Join(c echo.Context) error {
 	}
 	roomID := c.Param("roomID")
 	if !h.repo.IsRoomExist(roomID) {
-		return echo.NewHTTPError(http.StatusNotFound, "room not found")
+		h.repo.CreateRoom(roomID)
 	}
 
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
