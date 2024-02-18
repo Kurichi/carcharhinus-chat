@@ -48,7 +48,7 @@ func (r *RoomRepository) AddUser(roomID string, user *domain.User) error {
 		r.users[roomID] = map[string]*domain.User{}
 		// return errors.WithStack(domain.ErrRoomNotFound)
 	}
-	r.users[roomID][user.ID] = user
+	r.users[roomID][user.Name] = user
 
 	return nil
 }

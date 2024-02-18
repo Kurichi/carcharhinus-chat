@@ -48,9 +48,9 @@ func (h *OTTHandler) GenToken(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 	}
 
-	userID := claims["id"].(string)
+	username := claims["username"].(string)
 	token := genToken(32)
-	h.store.Store(token, userID)
+	h.store.Store(token, username)
 
 	return c.JSON(http.StatusOK, map[string]string{
 		"token": token,
@@ -63,12 +63,12 @@ func (h *OTTHandler) Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.QueryParam("token")
 
-		userID, ok := h.store.LoadAndDelete(token)
+		username, ok := h.store.LoadAndDelete(token)
 		if !ok {
 			return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 		}
 
-		c.Set("userID", userID)
+		c.Set("username", username)
 
 		return next(c)
 	}

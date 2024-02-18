@@ -11,17 +11,24 @@ type Room struct {
 }
 
 type User struct {
-	ID     string
+	Name   string
 	Conn   *websocket.Conn
-	Ch     chan interface{}
+	Ch     chan Comment
 	Cancel chan struct{}
+}
+
+type Comment struct {
+	UserName  string `json:"userName"`
+	Price     int    `json:"price"`
+	Comment   string `json:"comment"`
+	Timestamp int64  `json:"timestamp"`
 }
 
 func NewUser(id string, conn *websocket.Conn) *User {
 	return &User{
-		ID:     id,
+		Name:   id,
 		Conn:   conn,
-		Ch:     make(chan interface{}, 10),
+		Ch:     make(chan Comment, 10),
 		Cancel: make(chan struct{}),
 	}
 }

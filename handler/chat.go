@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/Kurichi/carcharhinus-chat/domain"
 	"github.com/Kurichi/carcharhinus-chat/infra"
@@ -28,7 +29,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func (h *ChatHandler) Join(c echo.Context) error {
-	userID, ok := c.Get("userID").(string)
+	username, ok := c.Get("username").(string)
 	if !ok {
 		return echo.NewHTTPError(http.StatusUnauthorized, "invalid token")
 	}
@@ -44,17 +45,19 @@ func (h *ChatHandler) Join(c echo.Context) error {
 	defer ws.Close()
 
 	// store client
-	user := domain.NewUser(userID, ws)
+	user := domain.NewUser(username, ws)
 	defer close(user.Cancel)
 	if err := h.repo.AddUser(roomID, user); err != nil {
 		return err
 	}
 
 	for {
-		_, msg, err := ws.ReadMessage()
-		if err != nil {
+		var msg domain.Comment
+		if err := ws.ReadJSON(&msg); err != nil {
 			break
 		}
+		msg.Timestamp = time.Now().Unix()
+
 		users, err := h.repo.GetUsers(roomID)
 		if err != nil {
 			break
