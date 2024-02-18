@@ -52,6 +52,7 @@ func (h *ChatHandler) Join(c echo.Context) error {
 	if err := h.repo.AddUser(roomID, user); err != nil {
 		return err
 	}
+	user.Run()
 
 	for {
 		var msg domain.Comment
