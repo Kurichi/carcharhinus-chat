@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/gorilla/websocket"
 	"github.com/pkg/errors"
@@ -41,7 +41,7 @@ func (c *User) Run() {
 	for {
 		select {
 		case msg := <-c.Ch:
-			log.Println("Run", c.Name, msg)
+			fmt.Println("Run", c.Name, msg)
 			err := c.Conn.WriteJSON(msg)
 			if err != nil {
 				return
