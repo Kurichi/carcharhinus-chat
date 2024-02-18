@@ -52,7 +52,7 @@ func (h *ChatHandler) Join(c echo.Context) error {
 	if err := h.repo.AddUser(roomID, user); err != nil {
 		return err
 	}
-	user.Run()
+	go user.Run()
 
 	ticker := time.NewTicker(1 * time.Second)
 	for {
