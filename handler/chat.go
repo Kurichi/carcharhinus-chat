@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -40,7 +41,8 @@ func (h *ChatHandler) Join(c echo.Context) error {
 
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
-		return err
+		log.Println(err)
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to upgrade to websocket")
 	}
 	defer ws.Close()
 
