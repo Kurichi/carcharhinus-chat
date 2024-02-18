@@ -1,6 +1,7 @@
 package infra
 
 import (
+	"log"
 	"sync"
 
 	"github.com/Kurichi/carcharhinus-chat/domain"
@@ -72,6 +73,8 @@ func (r *RoomRepository) PushMsg(roomID string, msg *domain.Comment) error {
 	r.lock.RLock()
 	defer r.lock.RUnlock()
 
+	log.Println("PushMsg", roomID, msg)
+
 	room, ok := r.users[roomID]
 	if !ok {
 		return errors.WithStack(domain.ErrRoomNotFound)
@@ -79,6 +82,7 @@ func (r *RoomRepository) PushMsg(roomID string, msg *domain.Comment) error {
 
 	// users := make([]*domain.User, 0, len(room))
 	for _, user := range room {
+		log.Println("PushMsg", user.Name, msg)
 		// users = append(users, user)
 		user.Ch <- *msg
 	}
